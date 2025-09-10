@@ -11,6 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
+import {  useNavigate } from "react-router-dom";
 export default function ShoppingCart() {
   const theme = useTheme();
   const navbarPages = ["Shop", "Services", "Community"];
@@ -30,7 +31,15 @@ export default function ShoppingCart() {
     setCart(storedCart);
     console.log(cart);
   }, []);
-  function handleShoppingCart() {}
+  const navigate = useNavigate();
+
+  function handleShoppingCart() {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      navigate("/checkout"); // هنا الصح
+    }, 1000);
+  }
   return (
     <>
       <Navbar

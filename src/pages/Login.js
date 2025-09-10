@@ -81,7 +81,7 @@ export default function Login() {
         localStorage.setItem("currentUser", JSON.stringify(exists));
 
         openSignInDialog("Login successful!", "success");
-        navigate("/home");
+        navigate("/");
       } else {
         openSignInDialog("Email or password is incorrect.", "error");
       }
