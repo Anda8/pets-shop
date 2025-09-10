@@ -15,6 +15,7 @@ function LogoutDialog({ open, onClose }) {
 
   const handleConfirm = () => {
     localStorage.removeItem("currentUser");
+    localStorage.removeItem("currentUser");
     onClose();
     navigate("/login", { replace: true });
   };

@@ -77,7 +77,6 @@ export default function Login() {
       );
 
       if (exists) {
-        // localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("currentUser", JSON.stringify(exists));
 
         openSignInDialog("Login successful!", "success");

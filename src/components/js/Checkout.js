@@ -1,5 +1,5 @@
 import { useTheme } from "@emotion/react";
-import Navbar from "../components/js/Navbar";
+import Navbar from "./Navbar";
 import {
   Box,
   Button,
@@ -17,8 +17,8 @@ import {
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import MySnackBar from "../components/js/MySnackBar";
+import { Link, useAsyncError } from "react-router-dom";
+import MySnackBar from "./MySnackBar";
 
 // Stripe
 import {
@@ -42,6 +42,7 @@ export default function Checkout() {
 
   // make the form input like component
   // 3. إخفاء أو إظهار آخر 4 أرقام
+  // 4. التحقق (Validation)
 
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -138,6 +139,7 @@ export default function Checkout() {
   // DIALOG MODAL
   const [showSignInDialog, setShowSignInDialog] = useState(false);
   const [message, setMessage] = useState({ text: "", type: "success" });
+  const user = JSON.parse(localStorage.getItem("currentUser"));
 
   function openSignInDialog(text, type = "success") {
     setMessage({ text, type });
@@ -266,7 +268,7 @@ export default function Checkout() {
                 Username
               </FormLabel>
               <TextField
-                defaultValue="Liam_Carter"
+                defaultValue={user.username}
                 margin="normal"
                 disabled
                 fullWidth
@@ -275,7 +277,7 @@ export default function Checkout() {
             <FormControl sx={{ mb: 2 }}>
               <FormLabel sx={{ textAlign: "start" }}>Address</FormLabel>
               <TextField
-                defaultValue="123 Maple Street"
+                defaultValue={user.address}
                 margin="normal"
                 disabled
                 fullWidth
@@ -288,7 +290,7 @@ export default function Checkout() {
                 City
               </FormLabel>
               <TextField
-                defaultValue="Anytown"
+                defaultValue={user.city}
                 margin="normal"
                 disabled
                 fullWidth
@@ -303,7 +305,7 @@ export default function Checkout() {
                   State
                 </FormLabel>
                 <TextField
-                  defaultValue="CA"
+                  defaultValue={user.state}
                   margin="normal"
                   disabled
                   fullWidth
@@ -316,8 +318,7 @@ export default function Checkout() {
                   Zip Code
                 </FormLabel>
                 <TextField
-                  // label="Zip Code"
-                  defaultValue="90210"
+                  defaultValue={user.zipCode}
                   margin="normal"
                   disabled
                   fullWidth
