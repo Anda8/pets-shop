@@ -18,11 +18,12 @@ import {
   useTheme,
 } from "@mui/material";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import SearchBar from "./SearchBar";
+import LogoutDialog from "./LogoutDialog";
 
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
@@ -35,6 +36,7 @@ export default function Navbar({
   cartItems = null,
 }) {
   const theme = useTheme();
+  const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const handleOpenNavMenu = (event) => {
@@ -51,6 +53,7 @@ export default function Navbar({
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+  const [openLogoutDialog, setOpenLogoutDialog] = useState(false);
 
   return (
     <AppBar
@@ -377,9 +380,15 @@ export default function Navbar({
                     to={
                       setting === "Account"
                         ? "/my-account"
+                        : setting === "Logout"
+                        ? ""
                         : `/${setting.toLowerCase()}`
                     }
-                    onClick={handleCloseUserMenu}
+                    onClick={
+                      setting === "Logout"
+                        ? () => setOpenLogoutDialog(true) // هنا بيشغل الـ Logout
+                        : handleCloseUserMenu
+                    }
                   >
                     <Typography
                       sx={{
@@ -397,6 +406,10 @@ export default function Navbar({
               </Menu>
             </Box>
           )}
+          <LogoutDialog
+            open={openLogoutDialog}
+            onClose={() => setOpenLogoutDialog(false)}
+          />
         </Toolbar>
       </Container>
     </AppBar>

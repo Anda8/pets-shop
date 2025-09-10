@@ -230,10 +230,12 @@ export default function ProfilePage() {
                       ? "/shopping-cart"
                       : `/${page.label.toLowerCase().replace(/\s+/g, "-")}`
                   }
-                  sx={{backgroundColor:
-                    page.label === "My Account"
-                      ? "rgba(0, 0, 0, 0.04)"
-                      : "transparent",}}
+                  sx={{
+                    backgroundColor:
+                      page.label === "My Account"
+                        ? "rgba(0, 0, 0, 0.04)"
+                        : "transparent",
+                  }}
                 >
                   <ListItemIcon sx={{ color: theme.palette.text.primary }}>
                     {page.icon}
@@ -423,6 +425,41 @@ export default function ProfilePage() {
                             View
                           </Button>
                           <Dialog
+                            open={selectedOrder}
+                            onClose={() => setSelectedOrder(null)}
+                          >
+                            <DialogTitle>
+                              Order Details - {selectedOrder?.id}
+                            </DialogTitle>
+                            <DialogContent>
+                              <Typography>
+                                Date: {selectedOrder?.date}
+                              </Typography>
+                              <Typography>
+                                Status: {selectedOrder?.status}
+                              </Typography>
+                              <Typography>
+                                Total: {selectedOrder?.total}
+                              </Typography>
+
+                              <Typography sx={{ mt: 2, fontWeight: "bold" }}>
+                                Items:
+                              </Typography>
+                              <List>
+                                {selectedOrder?.items.map((item, i) => (
+                                  <ListItem key={i}>
+                                    <ListItemText primary={item} />
+                                  </ListItem>
+                                ))}
+                              </List>
+                            </DialogContent>
+                            <DialogActions>
+                              <Button onClose={() => setSelectedOrder(null)}>
+                                Close
+                              </Button>
+                            </DialogActions>
+                          </Dialog>
+                          {/* <Dialog
                             open={!!selectedOrder}
                             onClose={() => setSelectedOrder(null)}
                           >
@@ -456,7 +493,7 @@ export default function ProfilePage() {
                                 Close
                               </Button>
                             </DialogActions>
-                          </Dialog>
+                          </Dialog> */}
                         </TableCell>
                       </TableRow>
                     ))}
@@ -469,7 +506,7 @@ export default function ProfilePage() {
               <div>
                 <Typography
                   variant="h5"
-                  sx={{ fontWeight: "bold", textAlign: "start", mb: 4}}
+                  sx={{ fontWeight: "bold", textAlign: "start", mb: 4 }}
                 >
                   My Favorites
                 </Typography>
