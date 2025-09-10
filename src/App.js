@@ -8,7 +8,7 @@ import TipsPage from "./pages/TipsPage";
 import { useMemo } from "react";
 // import AnimalsList from "./components/js/AnimalsList";
 import ShoppingCart from "./pages/ShoppingCart";
-import Checkout from "./components/js/Checkout";
+import Checkout from "./pages/Checkout";
 import StripeProvider from "./components/js/StripeProvider";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
