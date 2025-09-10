@@ -38,6 +38,7 @@ export default function Checkout() {
   const [loading, setLoading] = useState(false);
   const [cart, setCart] = useState([]);
   const [paymentMethod, setPaymentMethod] = useState("credit");
+  const [isFormValid, setIsFormValid] = useState(false);
   const navbarPages = ["Shop", "Services", "About"];
 
   // make the form input like component
@@ -58,7 +59,76 @@ export default function Checkout() {
   const shipping = 5;
   const tax = subtotal * 0.08;
   const total = subtotal + shipping + tax;
-  // const [card, setCard] = useState({
+//  handle card inputs
+const handleCardChange = (event) => {
+    // event.complete => true لو البيانات مكتملة وصحيحة
+    if (event.complete) {
+      setIsFormValid(true);
+    } else {
+      setIsFormValid(false);
+    }
+  };
+
+  // DIALOG MODAL
+  const [showSignInDialog, setShowSignInDialog] = useState(false);
+  const [message, setMessage] = useState({ text: "", type: "success" });
+  const user = JSON.parse(localStorage.getItem("currentUser"));
+
+  function openSignInDialog(text, type = "success") {
+    setMessage({ text, type });
+    setShowSignInDialog(true);
+  }
+  function handleSignInClose() {
+    setShowSignInDialog(false);
+  }
+  // form submit
+  async function handleShoppingCart(e) {
+    e.preventDefault();
+    setLoading(true);
+    // use stripe
+    if (!stripe || !elements) {
+      openSignInDialog("Stripe not loaded", "error");
+      setLoading(false);
+      return;
+    }
+    const cardElement = elements.getElement(CardElement);
+    const { error, paymentMethod } = await stripe.createPaymentMethod({
+      type: "card",
+      card: cardElement,
+    });
+    if (error) {
+      openSignInDialog(error.message, "error");
+    } else {
+      console.log("✅ Payment method:", paymentMethod);
+      openSignInDialog("Order placed successfully!", "success");
+
+      setLoading(false);
+    }
+
+    // 🔑 ابعتي paymentMethod.id للسيرفر علشان يكمل الدفع
+    await fetch("http://localhost:5000/create-payment-intent", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        paymentMethodId: paymentMethod.id,
+        amount: total * 100,
+      }),
+    });
+
+    // setTimeout(() => {
+    //   const isCardValid = validateField("cardNumber", card.cardNumber);
+    //   const isExpValid = validateField("expDate", card.expDate);
+    //   const isCvvValid = validateField("cvv", card.cvv);
+
+    //   if (isCardValid && isExpValid && isCvvValid) {
+    //     openSignInDialog("Order placed!", "success");
+    //   } else {
+    //     openSignInDialog("Fix validation errors", "error");
+    //     console.log("");
+    //   }
+    //   setLoading(false);
+    // }, 1000);
+     // const [card, setCard] = useState({
   //   method: "credit",
   //   cardNumber: "",
   //   expDate: "",
@@ -135,66 +205,6 @@ export default function Checkout() {
   //   setErrors((prev) => ({ ...prev, [field]: msg }));
   //   return !msg;
   // };
-
-  // DIALOG MODAL
-  const [showSignInDialog, setShowSignInDialog] = useState(false);
-  const [message, setMessage] = useState({ text: "", type: "success" });
-  const user = JSON.parse(localStorage.getItem("currentUser"));
-
-  function openSignInDialog(text, type = "success") {
-    setMessage({ text, type });
-    setShowSignInDialog(true);
-  }
-  function handleSignInClose() {
-    setShowSignInDialog(false);
-  }
-  // form submit
-  async function handleShoppingCart(e) {
-    e.preventDefault();
-    setLoading(true);
-    // use stripe
-    if (!stripe || !elements) {
-      openSignInDialog("Stripe not loaded", "error");
-      setLoading(false);
-      return;
-    }
-    const cardElement = elements.getElement(CardElement);
-    const { error, paymentMethod } = await stripe.createPaymentMethod({
-      type: "card",
-      card: cardElement,
-    });
-    if (error) {
-      openSignInDialog(error.message, "error");
-    } else {
-      console.log("✅ Payment method:", paymentMethod);
-      openSignInDialog("Order placed successfully!", "success");
-
-      setLoading(false);
-    }
-
-    // 🔑 ابعتي paymentMethod.id للسيرفر علشان يكمل الدفع
-    await fetch("http://localhost:5000/create-payment-intent", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        paymentMethodId: paymentMethod.id,
-        amount: total * 100,
-      }),
-    });
-
-    // setTimeout(() => {
-    //   const isCardValid = validateField("cardNumber", card.cardNumber);
-    //   const isExpValid = validateField("expDate", card.expDate);
-    //   const isCvvValid = validateField("cvv", card.cvv);
-
-    //   if (isCardValid && isExpValid && isCvvValid) {
-    //     openSignInDialog("Order placed!", "success");
-    //   } else {
-    //     openSignInDialog("Fix validation errors", "error");
-    //     console.log("");
-    //   }
-    //   setLoading(false);
-    // }, 1000);
   }
   return (
     <>
@@ -372,7 +382,7 @@ export default function Checkout() {
             {paymentMethod === "credit" && (
               <>
                 {/* Card Number */}
-                <FormControl sx={{ mb: 2 }}>
+                <FormControl sx={{ mb: 2 }} >
                   <FormLabel sx={{ textAlign: "start" }}>Card Number</FormLabel>
                   <Box
                     sx={{
@@ -382,6 +392,7 @@ export default function Checkout() {
                     }}
                   >
                     <CardNumberElement
+                    onChange={handleCardChange}
                       options={{
                         style: {
                           base: {
@@ -416,6 +427,7 @@ export default function Checkout() {
                       sx={{ border: "1px solid #ccc", borderRadius: 2, p: 1.5 }}
                     >
                       <CardExpiryElement
+                    onChange={handleCardChange}
                         options={{
                           style: {
                             base: {
@@ -439,6 +451,7 @@ export default function Checkout() {
                       sx={{ border: "1px solid #ccc", borderRadius: 2, p: 1.5 }}
                     >
                       <CardCvcElement
+                    onChange={handleCardChange}
                         options={{
                           style: {
                             base: {
@@ -692,7 +705,7 @@ export default function Checkout() {
           {/* Place Order Button */}
           <Button
             variant="contained"
-            fullWidth
+            
             sx={{
               backgroundColor: "#00C853",
               py: 1.5,
@@ -707,7 +720,7 @@ export default function Checkout() {
                 color: theme.palette.common.white,
               },
             }}
-            disabled={loading}
+            disabled={loading  || !isFormValid}
             onClick={handleShoppingCart}
           >
             {loading ? (
