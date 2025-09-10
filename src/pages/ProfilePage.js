@@ -79,7 +79,6 @@ export default function ProfilePage() {
   ];
   useEffect(() => {
     const savedUser = JSON.parse(localStorage.getItem("currentUser"));
-    console.log(savedUser);
     if (savedUser) {
       setUser({
         id: savedUser.id,

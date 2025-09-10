@@ -181,7 +181,7 @@ export default function Navbar({
                       {showCartIcon && (
                         <Box
                           component={Link}
-                          to="shopping-cart"
+                          to="/shopping-cart"
                           state={{ displayedType: "favorites" }}
                           sx={{
                             backgroundColor: theme.palette.background.default,
@@ -313,7 +313,7 @@ export default function Navbar({
                   {showCartIcon && (
                     <Box
                       component={Link}
-                      to="shopping-cart"
+                      to="/shopping-cart"
                       sx={{
                         backgroundColor: theme.palette.background.default,
                         color: theme.palette.secondary.main,
