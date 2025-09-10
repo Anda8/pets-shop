@@ -11,7 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 export default function ShoppingCart() {
   const theme = useTheme();
   const navbarPages = ["Shop", "Services", "Community"];
@@ -86,13 +86,11 @@ export default function ShoppingCart() {
                 <CardContent sx={{ flexGrow: 1, textAlign: "start" }}>
                   <Typography>{item.title}</Typography>
                   <Typography color="secondary">
-                    {" "}
-                    Quantity: {item.quantity}{" "}
+                    Quantity: {item.quantity}
                   </Typography>
                 </CardContent>
                 <CardContent>
                   <Typography>
-                    {" "}
                     {(item.price * item.quantity).toFixed(2)} EGP
                   </Typography>
                 </CardContent>
