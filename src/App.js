@@ -110,7 +110,7 @@ function App() {
             ))}
 
             {/* 404 Fallback */}
-            {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </div>
       </StripeProvider>
