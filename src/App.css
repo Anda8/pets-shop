@@ -1,31 +1,19 @@
 .App {
   text-align: center;
 }
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+::selection {
+  background: #638773;
+  color: #fff;
+}
+input:focus {
+  outline: none;
+  border: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
   }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
 }
 
 @keyframes App-logo-spin {
@@ -35,4 +23,66 @@
   to {
     transform: rotate(360deg);
   }
+}
+/* custom scroller */
+/* للـ Chrome / Edge / Safari */
+/* Chrome, Edge, Safari */
+
+
+::-webkit-scrollbar-track {
+  background: transparent;  
+  /* خلفية شفافة */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;      /* يخليها دائرية */
+  border: 3px solid transparent;
+   /* يخلي الـ thumb شبه floating */
+  background-clip: content-box;  
+}
+
+
+/* للـ Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #4caf50 transparent;
+  scrollbar-width: 10px;
+}
+
+/* when your type something error in signup / login the btn shakes */
+@keyframes shake {
+  0% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-6px);
+  }
+  40% {
+    transform: translateX(6px);
+  }
+  60% {
+    transform: translateX(-6px);
+  }
+  80% {
+    transform: translateX(6px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.shake {
+  animation: shake 0.4s;
+}
+/* The default show/hide eye button is disabled in the browser. Chrome/Edge */
+input::-ms-reveal,
+input::-ms-clear,
+input::-webkit-contacts-auto-fill-button,
+input::-webkit-credentials-auto-fill-button {
+  display: none !important;
+}
+
+input[type="password"]::-webkit-textfield-decoration-container {
+  display: none !important;
 }
